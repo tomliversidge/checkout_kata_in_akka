@@ -44,7 +44,15 @@ namespace CheckoutKata
         {
             Receive<ScanItems>(msg =>
             {
-                Sender.Tell(new PaymentRequired(Subtotal(msg.Items) - Discount(msg.Items, offers))); 
+                var total = Subtotal(msg.Items) - Discount(msg.Items, offers);
+                if (total > 0)
+                {
+                    Sender.Tell(new PaymentRequired(total));
+                }
+                else
+                {
+                    Sender.Tell(new NoPaymentRequired());
+                }
             });
         }
         private static double Subtotal(IEnumerable<Item> items) =>
@@ -121,5 +129,17 @@ namespace CheckoutKata
             var payment = ExpectMsg<PaymentRequired>();
             Assert.Equal(355, payment.Total);
         }
+
+        [Fact]
+        public void when_there_are_no_items_in_the_cart()
+        {
+            var checkout = Sys.ActorOf(Props.Create(() => new Checkout(new List<Offer>())), "checkout");
+            checkout.Tell(new ScanItems(new List<Item>()));
+            ExpectMsg<NoPaymentRequired>();
+        }
+    }
+
+    public class NoPaymentRequired
+    {
     }
 }
