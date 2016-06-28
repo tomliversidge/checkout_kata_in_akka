@@ -102,15 +102,24 @@ namespace CheckoutKata
         [Fact]
         public void when_no_discounts_are_applied()
         {
+            var checkout = Sys.ActorOf(Props.Create(() => new Checkout(new List<Offer>())), "checkout");
+            checkout.Tell(new ScanItems(_items));
+            var payment = ExpectMsg<PaymentRequired>();
+            Assert.Equal(410, payment.Total);
+        }
+
+        [Fact]
+        public void when_discounts_are_applied()
+        {
             var offers = new[]
               {
                 new Offer("A", 3, 20),
                 new Offer("B", 2, 15)
             };
-            var checkout = Sys.ActorOf(Props.Create(() => new Checkout(new List<Offer>())), "checkout");
+            var checkout = Sys.ActorOf(Props.Create(() => new Checkout(offers)), "checkout");
             checkout.Tell(new ScanItems(_items));
             var payment = ExpectMsg<PaymentRequired>();
-            Assert.Equal(410, payment.Total);
+            Assert.Equal(355, payment.Total);
         }
     }
 }
