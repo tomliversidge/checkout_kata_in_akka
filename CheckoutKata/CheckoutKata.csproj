@@ -76,8 +76,17 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CheckoutKata.cs" />
+    <Compile Include="Checkout.cs" />
+    <Compile Include="Offer.cs" />
+    <Compile Include="Extensions.cs" />
+    <Compile Include="Item.cs" />
+    <Compile Include="NoPaymentRequired.cs" />
+    <Compile Include="PaymentRequired.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ScanItems.cs" />
+    <Compile Include="when_discounts_are_applied.cs" />
+    <Compile Include="when_no_discounts_are_applied.cs" />
+    <Compile Include="when_there_are_no_items_in_the_cart.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
